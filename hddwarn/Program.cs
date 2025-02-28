@@ -37,14 +37,15 @@ class Program
         Config config = ReadConfig() ?? CreateDefaultConfig();
         string mailContent = GenerateDiskReport(config);
         Console.WriteLine("\n--- Mail Content ---\n" + mailContent);
-        SendMail(config, "Disk Space Report", mailContent);
+        SendMailAsync(config, "Disk Space Report", mailContent);
     }
 
     static string GenerateDiskReport(Config config)
     {
         string hostName = Environment.MachineName;
         string report = $"Hostname: {hostName}\n";
-        
+        long GB_DIVISOR = 1024 * 1024 * 1024;
+
         try
         {
             var drives = DriveInfo.GetDrives().Where(d => d.IsReady);
@@ -52,14 +53,14 @@ class Program
             {
                 try
                 {
-                    long freeSpaceGB = drive.AvailableFreeSpace / (1024 * 1024 * 1024);
+                    long freeSpaceGB = drive.AvailableFreeSpace / GB_DIVISOR;
                     string warning = freeSpaceGB <= config.WarningThreshold ? "WARNING! " : "";
                     report += $"{warning}DISK {drive.Name} has {freeSpaceGB} GB left free space.\n";
 
                 }
                 catch (Exception ex)
                 {
-                    continue;
+                    Console.WriteLine($"Failed to fetch details for drive {drive.Name}: {ex.Message}");
                 }
             }
             return report;
@@ -72,7 +73,7 @@ class Program
         }
     }
 
-    static void SendMail(Config config, string subject, string body)
+    static async Task SendMailAsync(Config config, string subject, string body)
     {
         try
         {
@@ -82,7 +83,7 @@ class Program
                 Credentials = new NetworkCredential(config.FromAdress, config.Password),
                 EnableSsl = true
             };
-            client.Send(msg);
+            await client.SendMailAsync(msg);
             Console.WriteLine("Email sent successfully to " + config.Recipient);
         }
         catch (Exception ex)
@@ -90,6 +91,7 @@ class Program
             Console.WriteLine("Failed to send email: " + ex.Message);
         }
     }
+
 
     static Config ReadConfig()
     {
