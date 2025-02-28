@@ -7,6 +7,9 @@ namespace hddwarn;
 
 class Program
 {
+    
+    const string ConfigFileName = "config.json";
+    
     class Config
     {
         public string MailServer { get; set; } = "smtp.example.com";
@@ -50,9 +53,9 @@ class Program
             {
                 try
                 {
-                    long freeSpaceGB = drive.AvailableFreeSpace / gbDivisor;
-                    string warning = freeSpaceGB <= config.WarningThreshold ? "WARNING! " : "";
-                    report += $"DISK {drive.Name} has {freeSpaceGB} GB left free space. {warning}\n";
+                    long freeSpaceGb = drive.AvailableFreeSpace / gbDivisor;
+                    string warning = freeSpaceGb <= config.WarningThreshold ? "WARNING! " : "";
+                    report += $"DISK {drive.Name} has {freeSpaceGb} GB left free space. {warning}\n";
 
                 }
                 catch (Exception ex)
@@ -90,9 +93,9 @@ class Program
     
     static Config ReadConfig()
     {
-        if (File.Exists("config.json"))
+        if (File.Exists(ConfigFileName))
         {
-            string json = File.ReadAllText("config.json");
+            string json = File.ReadAllText(ConfigFileName);
             return JsonSerializer.Deserialize<Config>(json);
         }
         return null;
@@ -101,7 +104,7 @@ class Program
     static Config CreateDefaultConfig()
     {
         Config defaultConfig = new Config();
-        File.WriteAllText("config.json", JsonSerializer.Serialize(defaultConfig));
+        File.WriteAllText(ConfigFileName, JsonSerializer.Serialize(defaultConfig));
         Console.WriteLine("Default config created at config.json");
         return defaultConfig;
     }

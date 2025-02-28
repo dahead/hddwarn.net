@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("hddwarn")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d38a8e60be6548896034232948a1f3470ee6c1af")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+613c198385158c4a66ef1f44d59fbde3799d2d5a")]
 [assembly: System.Reflection.AssemblyProductAttribute("hddwarn")]
 [assembly: System.Reflection.AssemblyTitleAttribute("hddwarn")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
