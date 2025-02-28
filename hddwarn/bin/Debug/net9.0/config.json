@@ -1,0 +1,1 @@
+{"MailServer":"smtp.example.com","Port":587,"SendMail":"youremail@example.com","Password":"yourpassword","Recipient":"john.doe@example.com"}

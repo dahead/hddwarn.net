@@ -1,0 +1,14 @@
+/home/dh/RiderProjects/hddwarn/hddwarn/bin/Debug/net9.0/hddwarn
+/home/dh/RiderProjects/hddwarn/hddwarn/bin/Debug/net9.0/hddwarn.deps.json
+/home/dh/RiderProjects/hddwarn/hddwarn/bin/Debug/net9.0/hddwarn.runtimeconfig.json
+/home/dh/RiderProjects/hddwarn/hddwarn/bin/Debug/net9.0/hddwarn.dll
+/home/dh/RiderProjects/hddwarn/hddwarn/bin/Debug/net9.0/hddwarn.pdb
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.GeneratedMSBuildEditorConfig.editorconfig
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.AssemblyInfoInputs.cache
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.AssemblyInfo.cs
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.csproj.CoreCompileInputs.cache
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.dll
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/refint/hddwarn.dll
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.pdb
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.genruntimeconfig.cache
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/ref/hddwarn.dll
