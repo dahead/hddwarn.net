@@ -52,17 +52,15 @@ class Program
             {
                 try
                 {
-
                     long freeSpaceGB = drive.AvailableFreeSpace / (1024 * 1024 * 1024);
                     string warning = freeSpaceGB <= config.WarningThreshold ? "WARNING! " : "";
                     report += $"{warning}DISK {drive.Name} has {freeSpaceGB} GB left free space.\n";
 
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
                     continue;
                 }
-                
             }
             return report;
             
