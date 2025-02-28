@@ -13,9 +13,10 @@ class Program
     {
         public string MailServer { get; set; }
         public int Port { get; set; }
-        public string SendMail { get; set; }
+        public string FromAdress { get; set; }
         public string Password { get; set; }
         public string Recipient { get; set; }
+        public int WarningThreshold { get; set; } = 10;
     }
 
     static void Main(string[] args)
@@ -34,37 +35,56 @@ class Program
         }
 
         Config config = ReadConfig() ?? CreateDefaultConfig();
-        string mailContent = GenerateDiskReport();
+        string mailContent = GenerateDiskReport(config);
         Console.WriteLine("\n--- Mail Content ---\n" + mailContent);
         SendMail(config, "Disk Space Report", mailContent);
     }
 
-    static string GenerateDiskReport()
+    static string GenerateDiskReport(Config config)
     {
-        string computerName = Environment.MachineName;
-        var drives = DriveInfo.GetDrives().Where(d => d.IsReady);
-        string report = $"Servername: {computerName}\n";
+        string hostName = Environment.MachineName;
+        string report = $"Hostname: {hostName}\n";
         
-        foreach (var drive in drives)
+        try
         {
-            long freeSpaceGB = drive.AvailableFreeSpace / (1024 * 1024 * 1024);
-            string warning = freeSpaceGB <= 10 ? "WARNING! " : "";
-            report += $"{warning}DISK {drive.Name} has {freeSpaceGB} GB left free space.\n";
+            var drives = DriveInfo.GetDrives().Where(d => d.IsReady);
+            foreach (var drive in drives)
+            {
+                try
+                {
+
+                    long freeSpaceGB = drive.AvailableFreeSpace / (1024 * 1024 * 1024);
+                    string warning = freeSpaceGB <= config.WarningThreshold ? "WARNING! " : "";
+                    report += $"{warning}DISK {drive.Name} has {freeSpaceGB} GB left free space.\n";
+
+                }
+                catch (Exception e)
+                {
+                    continue;
+                }
+                
+            }
+            return report;
+            
         }
-        return report;
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        }
     }
 
     static void SendMail(Config config, string subject, string body)
     {
         try
         {
-            MailMessage mail = new MailMessage(config.SendMail, config.Recipient, subject, body);
+            MailMessage msg = new MailMessage(config.FromAdress, config.Recipient, subject, body);
             SmtpClient client = new SmtpClient(config.MailServer, config.Port)
             {
-                Credentials = new NetworkCredential(config.SendMail, config.Password),
+                Credentials = new NetworkCredential(config.FromAdress, config.Password),
                 EnableSsl = true
             };
-            client.Send(mail);
+            client.Send(msg);
             Console.WriteLine("Email sent successfully to " + config.Recipient);
         }
         catch (Exception ex)
@@ -89,9 +109,10 @@ class Program
         {
             MailServer = "smtp.example.com",
             Port = 587,
-            SendMail = "youremail@example.com",
+            FromAdress = "youremail@example.com",
             Password = "yourpassword",
-            Recipient = "john.doe@example.com"
+            Recipient = "john.doe@example.com",
+            WarningThreshold = 10
         };
         File.WriteAllText("config.json", JsonSerializer.Serialize(defaultConfig));
         Console.WriteLine("Default config created at config.json");

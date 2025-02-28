@@ -12,3 +12,4 @@
 /home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.pdb
 /home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.genruntimeconfig.cache
 /home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/ref/hddwarn.dll
+/home/dh/RiderProjects/hddwarn/hddwarn/obj/Debug/net9.0/hddwarn.sourcelink.json
