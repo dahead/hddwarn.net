@@ -11,11 +11,11 @@ class Program
 {
     class Config
     {
-        public string MailServer { get; set; }
-        public int Port { get; set; }
-        public string FromAdress { get; set; }
-        public string Password { get; set; }
-        public string Recipient { get; set; }
+        public string MailServer { get; set; } = "smtp.example.com";
+        public int Port { get; set; } = 587;
+        public string FromAdress { get; set; } = "youremail@example.com";
+        public string Password { get; set; } = "yourpassword";
+        public string Recipient { get; set; } = "john.doe@example.com";
         public int WarningThreshold { get; set; } = 10;
     }
 
@@ -42,9 +42,8 @@ class Program
 
     static string GenerateDiskReport(Config config)
     {
-        string hostName = Environment.MachineName;
-        string report = $"Hostname: {hostName}\n";
-        long GB_DIVISOR = 1024 * 1024 * 1024;
+        string report = $"Hostname: {Environment.MachineName}\n";
+        long gbDivisor = 1024 * 1024 * 1024;
 
         try
         {
@@ -53,9 +52,9 @@ class Program
             {
                 try
                 {
-                    long freeSpaceGB = drive.AvailableFreeSpace / GB_DIVISOR;
+                    long freeSpaceGB = drive.AvailableFreeSpace / gbDivisor;
                     string warning = freeSpaceGB <= config.WarningThreshold ? "WARNING! " : "";
-                    report += $"{warning}DISK {drive.Name} has {freeSpaceGB} GB left free space.\n";
+                    report += $"DISK {drive.Name} has {freeSpaceGB} GB left free space. {warning}\n";
 
                 }
                 catch (Exception ex)
@@ -64,7 +63,6 @@ class Program
                 }
             }
             return report;
-            
         }
         catch (Exception ex)
         {
@@ -91,8 +89,7 @@ class Program
             Console.WriteLine("Failed to send email: " + ex.Message);
         }
     }
-
-
+    
     static Config ReadConfig()
     {
         if (File.Exists("config.json"))
@@ -105,15 +102,7 @@ class Program
 
     static Config CreateDefaultConfig()
     {
-        Config defaultConfig = new Config
-        {
-            MailServer = "smtp.example.com",
-            Port = 587,
-            FromAdress = "youremail@example.com",
-            Password = "yourpassword",
-            Recipient = "john.doe@example.com",
-            WarningThreshold = 10
-        };
+        Config defaultConfig = new Config();
         File.WriteAllText("config.json", JsonSerializer.Serialize(defaultConfig));
         Console.WriteLine("Default config created at config.json");
         return defaultConfig;
@@ -130,18 +119,19 @@ class Program
     static void CreateTaskSchedulerEntry()
     {
         string exePath = Process.GetCurrentProcess().MainModule.FileName;
-        string xmlContent = $@"<?xml version='1.0' encoding='UTF-16'?>
-<Task version='1.3' xmlns='http://schemas.microsoft.com/windows/2004/02/mit/task'>
-  <Triggers>
-    <CalendarTrigger>
-      <Repetition><Interval>PT24H</Interval></Repetition>
-      <StartBoundary>{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss}</StartBoundary>
-    </CalendarTrigger>
-  </Triggers>
-  <Actions>
-    <Exec><Command>{exePath}</Command></Exec>
-  </Actions>
-</Task>";
+        string xmlContent = 
+            $@"<?xml version='1.0' encoding='UTF-16'?>
+            <Task version='1.3' xmlns='http://schemas.microsoft.com/windows/2004/02/mit/task'>
+              <Triggers>
+                <CalendarTrigger>
+                  <Repetition><Interval>PT24H</Interval></Repetition>
+                  <StartBoundary>{DateTime.UtcNow:yyyy-MM-ddTHH:mm:ss}</StartBoundary>
+                </CalendarTrigger>
+              </Triggers>
+              <Actions>
+                <Exec><Command>{exePath}</Command></Exec>
+              </Actions>
+            </Task>";
         File.WriteAllText("task_scheduler.xml", xmlContent);
         Process.Start("schtasks", $"/create /tn 'HDDWarn Task' /xml task_scheduler.xml /f");
         Console.WriteLine("Task scheduler entry successfully created.");
