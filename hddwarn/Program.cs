@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
 using System.Text.Json;
-using Microsoft.Win32;
-using System.Diagnostics;
+
+namespace hddwarn;
 
 class Program
 {
